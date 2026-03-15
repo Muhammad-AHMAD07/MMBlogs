@@ -1,1 +1,1 @@
-# Math_Tutor-Chatbot-for-Math-
+# Blogging Platform MMBlogs Built Using Django Framewrok 
