@@ -1,0 +1,82 @@
+<!-- templates/About.html -->
+{% extends "base.html" %}
+
+{% block title %}About - MMBlogs{% endblock %}
+
+{% block content %}
+  <div class="container py-5">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+      <h1 style="color:#00f0ff; text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);">
+        About <span style="color:white;">MMBlogs</span>
+      </h1>
+      <p class="lead text-light mt-3" style="max-width: 800px; margin: 0 auto;">
+        A digital space where curiosity meets clarity.  
+        I write about tech, ideas, and the future — one honest post at a time.
+      </p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <!-- Replace with your photo -->
+        <img src="https://images.unsplash.com/photo-1617980098988-9d9c9f9e9f9e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Futuristic Robot Avatar">
+      </div>
+      <div class="col-lg-6">
+        <h2 class="mb-4" style="color:#00f0ff;">Hi, I'm <strong>Muhammad Ahmad</strong></h2>
+        <p class="text-light">
+          I started <strong>MMBlogs</strong> to share what I learn about technology, productivity, and digital creativity. 
+          No fluff. No clickbait. Just real insights from real experience.
+        </p>
+        <p class="text-light">
+          Every post is written to help you think deeper, work smarter, and stay ahead in a fast-changing world.
+        </p>
+        <p class="text-muted small">
+          Based in [Islamabad] | Building online since 2025
+        </p>
+      </div>
+    </div>
+
+    <!-- Mission & Values -->
+    <div class="row mt-5">
+      <div class="col-12 text-center mb-4">
+        <h2 style="color:#00f0ff;">My Mission</h2>
+        <p class="text-light">Why I blog — and why it matters.</p>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="p-4 h-100 rounded" style="background: rgba(10, 20, 40, 0.5); border: 1px solid #00f0ff; height: 100%;">
+          <h4 style="color:#00f0ff;">💡 Clarity Over Noise</h4>
+          <p class="text-light">
+            In a world full of content, I focus on making things simple, clear, and useful.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="p-4 h-100 rounded" style="background: rgba(10, 20, 40, 0.5); border: 1px solid #00f0ff; height: 100%;">
+          <h4 style="color:#00f0ff;">🚀 Future-Focused</h4>
+          <p class="text-light">
+            I explore emerging tech, AI, and digital trends before they go mainstream.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="p-4 h-100 rounded" style="background: rgba(10, 20, 40, 0.5); border: 1px solid #00f0ff; height: 100%;">
+          <h4 style="color:#00f0ff;">📬 Honest Updates</h4>
+          <p class="text-light">
+            When you <a style="color:#00f0ff;">subscribe</a>, you only hear from me when something new and valuable drops.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-5">
+      <p class="text-light">Want to collaborate or say hello?</p>
+      <a href="/Workwithus" class="btn btn-mmblogs btn-lg me-3">Work With Me</a>
+      <a href="mailto:hello@mmblogs.com" class="btn btn-outline-light btn-lg">Email Me</a>
+    </div>
+  </div>
+{% endblock %}

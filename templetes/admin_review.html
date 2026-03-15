@@ -1,0 +1,109 @@
+<!-- templates/admin_review.html -->
+{% extends "base.html" %}
+
+{% block title %}Admin Review - MMBlogs{% endblock %}
+
+{% block content %}
+  <div class="container py-5">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="mb-3" style="color:#00f0ff; text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);">
+          🛡️ Admin Review Panel
+        </h1>
+        <p class="text-light">
+          Review and approve blog posts before they go live.
+        </p>
+      </div>
+    </div>
+
+    {% if posts %}
+      {% for post in posts %}
+        <div class="card mb-4 border-0 post-card" style="background: rgba(20, 30, 50, 0.6); border: 1px solid #00f0ff;" id="post-{{ post.id }}">
+          <div class="card-body">
+            <h5 class="card-title text-light">{{ post.title }}</h5>
+            {% if post.subtitle %}
+              <p class="card-subtitle text-muted mb-3">{{ post.subtitle }}</p>
+            {% endif %}
+
+            <p class="card-text text-muted" style="white-space: pre-line;">
+              {{ post.content|truncatechars:200 }}
+            </p>
+
+            <small class="text-muted">
+              By <strong>{{ post.author.username|title }}</strong> • 
+              {{ post.created_at|date:"M d, Y" }}
+            </small>
+
+            <div class="mt-3">
+              <!-- Approve Form -->
+              <form method="post" action="{% url 'approve_post' post.id %}" class="d-inline approve-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-mmblogs btn-sm">Approve</button>
+              </form>
+
+              <!-- Reject Form -->
+              <form method="post" action="{% url 'reject_post' post.id %}" class="d-inline reject-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm">Reject</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No posts pending review.</p>
+    {% endif %}
+  </div>
+
+  {% block extra_js %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Add submit listener to all approve/reject forms
+      document.querySelectorAll('.approve-form, .reject-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+          e.preventDefault(); // Prevent default submit
+
+          const postId = this.closest('.post-card').id.replace('post-', '');
+          const formData = new FormData(this);
+
+          fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              // Remove the post card from DOM
+              document.getElementById('post-' + postId).remove();
+
+              // Optional: Show a toast or update message
+              const messagesContainer = document.querySelector('.container mt-3') ||
+                document.querySelector('.container');
+
+              const alert = document.createElement('div');
+              alert.className = 'alert alert-success alert-dismissible fade show';
+              alert.role = 'alert';
+              alert.innerHTML = `
+                Post action completed successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              `;
+              messagesContainer.insertBefore(alert, messagesContainer.firstChild);
+
+              // Auto-remove alert after 3 seconds
+              setTimeout(() => alert.remove(), 3000);
+            } else {
+              alert('Failed to process the post. Please try again.');
+            }
+          })
+          .catch(err => {
+            console.error('Error:', err);
+            alert('An error occurred. Please refresh and try again.');
+          });
+        });
+      });
+    });
+  </script>
+  {% endblock %}
+{% endblock %}

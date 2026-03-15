@@ -1,0 +1,62 @@
+<!-- templates/submit_post.html -->
+{% extends "base.html" %}
+
+{% block title %}Submit Post - MMBlogs{% endblock %}
+
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <h1 class="mb-4" style="color:#00f0ff; text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);">
+          Write a New Blog
+        </h1>
+        <p class="text-light mb-5">
+          Your post will be reviewed by the admin before going live.
+        </p>
+
+        <form method="post" class="bg-dark p-4 rounded" style="border: 1px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);">
+          {% csrf_token %}
+
+          <!-- Title -->
+          <div class="mb-4">
+            <label for="title" class="form-label text-light">Title</label>
+            <input type="text" 
+                   class="form-control bg-dark text-light border-0" 
+                   id="title" 
+                   name="title" 
+                   placeholder="The Future of AI in 2025" 
+                   required>
+          </div>
+
+          <!-- Subtitle (Optional) -->
+          <div class="mb-4">
+            <label for="subtitle" class="form-label text-light">Subtitle (Optional)</label>
+            <input type="text" 
+                   class="form-control bg-dark text-light border-0" 
+                   id="subtitle" 
+                   name="subtitle" 
+                   placeholder="How AI is changing the way we think">
+          </div>
+
+          <!-- Content -->
+          <div class="mb-5">
+            <label for="content" class="form-label text-light">Content</label>
+            <textarea 
+                class="form-control bg-dark text-light border-0" 
+                id="content" 
+                name="content" 
+                rows="12" 
+                placeholder="Start writing your blog post here..." 
+                required
+            ></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-mmblogs">
+            Submit for Review
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

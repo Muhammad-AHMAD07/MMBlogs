@@ -1,0 +1,128 @@
+<!-- templates/post_detail.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - MMBlogs{% endblock %}
+
+{% block content %}
+  <div class="container py-5">
+    <article class="mx-auto" style="max-width: 800px;">
+      <!-- Post Header -->
+      <h1 style="color:#00f0ff; text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);">
+        {{ post.title|default:"Untitled Post" }}
+      </h1>
+      {% if post.subtitle %}
+        <h4 class="text-light mb-3">{{ post.subtitle }}</h4>
+      {% endif %}
+
+      <p class="text-muted mb-4">
+        By 
+        <strong>{{ post.author.username|default:"Unknown" }}</strong> • 
+        {{ post.created_at|date:"F d, Y" }}
+      </p>
+
+      <!-- Subscribe Button -->
+      {% if request.user.is_authenticated and request.user != post.author %}
+        <form method="post" action="{% url 'toggle_subscribe' post.author.id %}" class="mb-4">
+          {% csrf_token %}
+          {% if subscribed %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">❌ Unsubscribe</button>
+          {% else %}
+            <button type="submit" class="btn btn-mmblogs btn-sm">🔔 Subscribe to {{ post.author.username }}</button>
+          {% endif %}
+        </form>
+      {% elif request.user == post.author %}
+        <p class="text-muted small mb-4">You can't subscribe to your own posts.</p>
+      {% else %}
+        <p class="text-muted small mb-4">
+          <a href="{% url 'Workwithus' %}" style="color:#00f0ff;">Log in</a> to subscribe.
+        </p>
+      {% endif %}
+
+      <!-- Post Content -->
+      <div class="text-light lead" style="line-height: 1.8; white-space: pre-line;">
+        {{ post.content|linebreaks|default:"No content available." }}
+      </div>
+
+      <!-- Like & Dislike Buttons -->
+      <div class="mt-4 d-flex align-items-center gap-3">
+        <!-- Like Button -->
+        {% if request.user.is_authenticated and request.user != post.author %}
+          <form method="post" action="{% url 'like_post' post.id %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-mmblogs btn-sm">
+              👍 {{ post.likes.count }} Like{% if post.likes.count != 1 %}s{% endif %}
+            </button>
+          </form>
+
+          <!-- Dislike Button -->
+          <form method="post" action="{% url 'dislike_post' post.id %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              👎 {{ post.dislikes.count }} Dislike{% if post.dislikes.count != 1 %}s{% endif %}
+            </button>
+          </form>
+        {% elif request.user == post.author %}
+          <small class="text-muted">You can't like or dislike your own post.</small>
+        {% else %}
+          <small class="text-muted">
+            <a href="{% url 'Workwithus' %}" style="color:#00f0ff;">Log in</a> to react.
+          </small>
+        {% endif %}
+      </div>
+
+      <hr class="my-5" style="border-color: #00f0ff; opacity: 0.3;">
+
+      <!-- Comments Section -->
+      <h4 style="color:#00f0ff;">💬 Comments ({{ post.comments.count }})</h4>
+
+      <!-- Add Comment Form -->
+      {% if request.user.is_authenticated and request.user != post.author %}
+        <form method="post" action="{% url 'add_comment' post.id %}" class="mb-4">
+          {% csrf_token %}
+          <div class="mb-3">
+            <textarea 
+              name="text" 
+              class="form-control bg-dark text-light border-0" 
+              rows="3" 
+              placeholder="Share your thoughts..." 
+              required
+              style="box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);"></textarea>
+          </div>
+          <button type="submit" class="btn btn-mmblogs">Post Comment</button>
+        </form>
+      {% elif request.user == post.author %}
+        <p class="text-muted">You cannot comment on your own post.</p>
+      {% else %}
+        <p class="text-muted">
+          <a href="{% url 'Workwithus' %}" style="color:#00f0ff;">Log in</a> to add a comment.
+        </p>
+      {% endif %}
+
+      <!-- List of Comments -->
+      <div class="mt-4">
+        {% for comment in post.comments.all %}
+          <div class="border-bottom pb-3 mb-3" style="border-color: rgba(255, 255, 255, 0.1);">
+            <div class="d-flex justify-content-between">
+              <strong>
+                {% if comment.author == request.user %}
+                  You
+                {% else %}
+                  {{ comment.author.username|default:"Unknown" }}
+                {% endif %}
+              </strong>
+              <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+            </div>
+            <p class="mt-2 text-light">{{ comment.text|default:"" }}</p>
+          </div>
+        {% empty %}
+          <p class="text-muted">No comments yet. Be the first!</p>
+        {% endfor %}
+      </div>
+
+      <!-- Back to Blogs -->
+      <div class="mt-5">
+        <a href="{% url 'Blogs' %}" class="btn btn-outline-light">← Back to Blogs</a>
+      </div>
+    </article>
+  </div>
+{% endblock %}

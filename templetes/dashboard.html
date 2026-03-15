@@ -1,0 +1,83 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Dashboard - MMBlogs{% endblock %}
+
+{% block content %}
+  <div class="container py-5">
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="mb-3" style="color:#00f0ff; text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);">
+          🖥️ Your Dashboard
+        </h1>
+        <p class="text-light">
+          Manage your blog posts: edit, delete, or submit a new one.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA: Write New Post -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <a href="{% url 'submit_post' %}" class="btn btn-mmblogs">✍️ Write New Post</a>
+      </div>
+    </div>
+
+    <!-- Posts List -->
+    <div class="row">
+      <div class="col-12">
+        <h3 class="mb-4 text-light">Your Posts</h3>
+
+        {% if posts %}
+          <div class="table-responsive">
+            <table class="table text-light">
+              <thead style="border-bottom: 1px solid #00f0ff;">
+                <tr>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for post in posts %}
+                  <tr>
+                    <td>
+                      <strong>{{ post.title }}</strong><br>
+                      <small class="text-muted">{{ post.subtitle|truncatechars:60 }}</small>
+                    </td>
+                    <td>
+                      {% if post.is_published %}
+                        <span class="badge bg-success">Published</span>
+                      {% else %}
+                        <span class="badge bg-warning text-dark">Pending Review</span>
+                      {% endif %}
+                    </td>
+                    <td class="text-muted">
+                      {{ post.created_at|date:"M d, Y" }}
+                    </td>
+                    <td>
+                      <!-- Delete Button -->
+                      <form method="post" action="{% url 'delete_post' post.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button 
+                          type="submit" 
+                          class="btn btn-outline-danger btn-sm"
+                          onclick="return confirm('Delete this post? All likes & comments will be removed.')">
+                          Delete
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted">You haven't written any posts yet. <a href="{% url 'submit_post' %}" style="color:#00f0ff;">Start writing</a>!</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
